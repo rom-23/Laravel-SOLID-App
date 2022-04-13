@@ -3,53 +3,56 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TableStoreRequest;
 use App\Models\Tables;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use function Ramsey\Uuid\v1;
 
 class TableController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
      * @return Application|Factory|View
      */
     public function index(): View|Factory|Application
     {
         $tables = Tables::all();
-        return view('admin.tables.index', [
-            'tables' => $tables
-        ]);
+        return view('admin.tables.index', compact('tables'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
      * @return Application|Factory|View
      */
-    public function create(): Application|Factory|View
+    public function create(): View|Factory|Application
     {
         return view('admin.tables.create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param TableStoreRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(TableStoreRequest $request): RedirectResponse
     {
-        //
+        Tables::create([
+            'name' => $request->name,
+            'guest_number' => $request->guest_number,
+            'status' => $request->status,
+            'location' => $request->location,
+        ]);
+
+        return to_route('admin.tables.index')->with('success', 'Table created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
     public function show($id)
     {
@@ -57,36 +60,35 @@ class TableController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Tables $table
+     * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Tables $table): View|Factory|Application
     {
-        //
+        return view('admin.tables.edit', compact('table'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param TableStoreRequest $request
+     * @param Tables $table
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(TableStoreRequest $request, Tables $table): RedirectResponse
     {
-        //
+        $table->update($request->validated());
+
+        return to_route('admin.tables.index')->with('success', 'Table updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Tables $table
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Tables $table): RedirectResponse
     {
-        //
+        $table->reservations()->delete();
+        $table->delete();
+
+        return to_route('admin.tables.index')->with('danger', 'Table daleted successfully.');
     }
 }

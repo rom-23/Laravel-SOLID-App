@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Reservations
@@ -33,30 +35,37 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereTableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereTelNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Reservations extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'first_name',
         'last_name',
         'tel_number',
         'email',
-        'table_id',
+        'tables_id',
         'res_date',
         'guest_number'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'res_date'
     ];
 
-
-
-//    public function table()
-//    {
-//        return $this->belongsTo(Tables::class);
-//    }
+    /**
+     * @return BelongsTo
+     */
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(Tables::class);
+    }
 }

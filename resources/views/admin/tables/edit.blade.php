@@ -13,12 +13,13 @@
             </div>
             <div class="m-2 p-2 bg-slate-100 rounded">
                 <div class="space-y-8 divide-y divide-gray-200 w-1/2 mt-10">
-                    <form method="POST" action="{{ route('admin.tables.store') }}">
+                    <form method="POST" action="{{ route('admin.tables.update', $table->id) }}">
                         @csrf
+                        @method('PUT')
                         <div class="sm:col-span-6">
                             <label for="name" class="block text-sm font-medium text-gray-700"> Name </label>
                             <div class="mt-1">
-                                <input type="text" id="name" name="name"
+                                <input type="text" id="name" name="name" value="{{ $table->name }}"
                                        class="block w-full appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
                             </div>
                             @error('name')
@@ -30,6 +31,7 @@
                             </label>
                             <div class="mt-1">
                                 <input type="number" id="guest_number" name="guest_number"
+                                       value="{{ $table->guest_number }}"
                                        class="block w-full appearance-none bg-white border border-gray-400 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
                             </div>
                             @error('guest_number')
@@ -40,8 +42,8 @@
                             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                             <div class="mt-1">
                                 <select id="status" name="status" class="form-multiselect block w-full mt-1">
-                                    @foreach (App\Enums\TableStatus::getValues() as $status => $row)
-                                        <option value="{{ $row }}">{{ $row }}</option>
+                                    @foreach (App\Enums\TableStatus::getValues() as $status =>$row)
+                                        <option value="{{ $row }}" @selected($table->status == $row)>{{ $row }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -53,8 +55,8 @@
                             <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                             <div class="mt-1">
                                 <select id="location" name="location" class="form-multiselect block w-full mt-1">
-                                    @foreach (App\Enums\TableLocation::getValues() as $location => $row)
-                                        <option value="{{ $row }}">{{ $row }}</option>
+                                    @foreach (App\Enums\TableLocation::getValues() as $location =>$row)
+                                        <option value="{{ $row }}" @selected($table->location == $row)>{{ $row }}</option>
                                     @endforeach
                                 </select>
                             </div>
