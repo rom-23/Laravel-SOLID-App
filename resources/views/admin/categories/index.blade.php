@@ -56,15 +56,15 @@
                                             <div class="flex space-x-2">
                                                 <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                    class="px-4 py-2 bg-green-500 hover:bg-green-700 rounded-lg  text-white">Edit</a>
-{{--                                                <form--}}
-{{--                                                    class="px-4 py-2 bg-red-500 hover:bg-red-700 rounded-lg text-white"--}}
-{{--                                                    method="POST"--}}
-{{--                                                    action="{{ route('admin.categories.destroy', $category->id) }}"--}}
-{{--                                                    onsubmit="return confirm('Are you sure?');">--}}
-{{--                                                    @csrf--}}
-{{--                                                    @method('DELETE')--}}
-{{--                                                    <button type="submit">Delete</button>--}}
-{{--                                                </form>--}}
+                                                <form
+                                                    class="px-4 py-2 bg-red-500 hover:bg-red-700 rounded-lg text-white"
+                                                    method="POST"
+                                                    action="{{ route('admin.categories.destroy', $category->id) }}"
+                                                    onsubmit="return confirm('Are you sure?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit">Delete</button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

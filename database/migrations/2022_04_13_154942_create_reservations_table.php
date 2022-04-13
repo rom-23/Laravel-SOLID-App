@@ -13,8 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('menuses', function (Blueprint $table) {
+        Schema::create('reservations', static function (Blueprint $table) {
             $table->id();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email');
+            $table->string('tel_number');
+            $table->dateTime('res_date');
+            $table->unsignedBigInteger('table_id');
+            $table->integer('guest_number');
             $table->timestamps();
         });
     }
@@ -26,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menuses');
+        Schema::dropIfExists('reservations');
     }
 };

@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -59,34 +60,51 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return Response
+     * @param Category $category
+     * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Category $category): Application|Factory|View
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return Response
+     * @param Request $request
+     * @param Category $category
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category): RedirectResponse
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required'
+        ]);
+        $image = $category->image;
+        if ($request->hasFile('image')) {
+            Storage::delete($category->image);
+            $image = $request->file('image')->store('public/categories');
+        }
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $image
+        ]);
+        return to_route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return Response
+     * @param Category $category
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Category $category): RedirectResponse
     {
-        //
+        Storage::delete($category->image);
+//        $category->menus()->detach();
+        $category->delete();
+
+        return to_route('admin.categories.index')->with('danger', 'Category deleted successfully.');
     }
 }

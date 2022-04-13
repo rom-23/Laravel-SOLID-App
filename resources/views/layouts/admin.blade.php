@@ -25,7 +25,7 @@
                 {{ __('Categories') }}
             </x-admin-nav-link>
             <x-admin-nav-link :href="route('admin.menus.index')" :active="request()->routeIs('admin.menus.index')">
-                {{ __('Menus') }}
+                {{ __('Menu') }}
             </x-admin-nav-link>
             <x-admin-nav-link :href="route('admin.tables.index')" :active="request()->routeIs('admin.tables.index')">
                 {{ __('Tables') }}
