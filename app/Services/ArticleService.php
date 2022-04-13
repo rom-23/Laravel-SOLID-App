@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\ArticleRepositoryInterface;
+use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticleService

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,13 +16,27 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    public Category $category;
+    protected CategoryRepositoryInterface $categoryRepository;
+
+    /**
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param Category $category
+     */
+    public function __construct(CategoryRepositoryInterface $categoryRepository, Category $category)
+    {
+        $this->category = $category;
+        $this->categoryRepository = $categoryRepository;
+    }
+
     /**
      * @return Application|Factory|View
      */
     public function index(): View|Factory|Application
     {
-        $categories = Category::all();
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', [
+            'categories' => $this->categoryRepository->all()
+        ]);
     }
 
     /**
@@ -38,28 +53,20 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $image = $request->file('image')->store('public/categories');
-        Category::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $image
-        ]);
-
+        $this->categoryRepository->store($request);
         return to_route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
     /**
      * @param int $id
-     * @return Response
+     * @return void
      */
-    public function show($id)
+    public function show(int $id): void
     {
         //
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
      * @param Category $category
      * @return Application|Factory|View
      */
@@ -69,29 +76,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
+     * @param CategoryRequest $request
      * @param Category $category
      * @return RedirectResponse
      */
-    public function update(Request $request, Category $category): RedirectResponse
+    public function update(CategoryRequest $request, Category $category): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]);
-        $image = $category->image;
-        if ($request->hasFile('image')) {
-            Storage::delete($category->image);
-            $image = $request->file('image')->store('public/categories');
-        }
-
-        $category->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $image
-        ]);
+        $this->categoryRepository->update($request, $category);
         return to_route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
@@ -101,10 +92,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        Storage::delete($category->image);
-//        $category->menus()->detach();
-        $category->delete();
-
+        $this->categoryRepository->delete($category);
         return to_route('admin.categories.index')->with('danger', 'Category deleted successfully.');
     }
 }

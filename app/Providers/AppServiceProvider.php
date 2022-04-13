@@ -15,7 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
     }
 
     /**
@@ -24,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Article::observe(ArticleObserver::class);
+
     }
 }

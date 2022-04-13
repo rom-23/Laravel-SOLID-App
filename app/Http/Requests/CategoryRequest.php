@@ -18,8 +18,6 @@ class CategoryRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     #[ArrayShape(['name' => "string[]", 'image' => "string[]", 'description' => "string[]"])]
