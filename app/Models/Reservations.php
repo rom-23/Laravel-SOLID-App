@@ -2,26 +2,31 @@
 
 namespace App\Models;
 
+use App\Enums\TableLocation;
+use App\Enums\TableStatus;
 use Carbon\Carbon;
-use Eloquent;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * App\Models\Reservations
+ * Class Reservations
  *
+ * @package App\Models
  * @property int $id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
  * @property string $tel_number
  * @property \Illuminate\Support\Carbon $res_date
- * @property int $table_id
+ * @property int $tables_id
  * @property int $guest_number
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property mixed $status
+ * @property mixed $location
+ * @property-read \App\Models\Tables $tables
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations query()
@@ -32,10 +37,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereResDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereTableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereTablesId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereTelNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Reservations whereUpdatedAt($value)
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class Reservations extends Model
 {
@@ -54,6 +59,11 @@ class Reservations extends Model
         'guest_number'
     ];
 
+    protected $casts = [
+        'status' => TableStatus::class,
+        'location' => TableLocation::class
+    ];
+
     /**
      * @var string[]
      */
@@ -64,7 +74,7 @@ class Reservations extends Model
     /**
      * @return BelongsTo
      */
-    public function table(): BelongsTo
+    public function tables(): BelongsTo
     {
         return $this->belongsTo(Tables::class);
     }

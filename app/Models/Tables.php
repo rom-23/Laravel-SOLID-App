@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Enums\TableLocation;
 use App\Enums\TableStatus;
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Tables
@@ -27,14 +29,28 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Tables whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tables whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tables whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reservations[] $reservations
+ * @property-read int|null $reservations_count
  */
 class Tables extends Model
 {
     use HasFactory;
+
+    /**
+     * @var string[]
+     */
     protected $fillable = ['name', 'guest_number', 'status', 'location'];
 
-    public function reservations()
+    protected $casts = [
+        'status' => TableStatus::class,
+        'location' => TableLocation::class
+    ];
+
+    /**
+     * @return HasMany
+     */
+    public function reservations(): HasMany
     {
         return $this->hasMany(Reservations::class);
     }

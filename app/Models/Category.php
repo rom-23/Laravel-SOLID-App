@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read Collection|\App\Models\Menu[] $menus
+ * @property-read int|null $menus_count
  */
 class Category extends Model
 {
