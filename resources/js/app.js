@@ -12,7 +12,6 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Example');
-import Alpine from "alpinejs";
-window.Alpine = Alpine;
-Alpine.start();
+require('./index');
+
+

@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Storage;
 class MenuRepository implements MenuRepositoryInterface
 {
     /**
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
-    public function all(): Collection
+    public function all(): \Illuminate\Support\Collection
     {
-        return Menu::all();
+        return Menu::orderBy('id','DESC')->get();
     }
 
     /**
