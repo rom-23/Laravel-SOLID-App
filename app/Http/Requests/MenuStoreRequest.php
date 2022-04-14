@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use JetBrains\PhpStorm\ArrayShape;
 
 class MenuStoreRequest extends FormRequest
 {
@@ -21,7 +22,8 @@ class MenuStoreRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    #[ArrayShape(['name' => "string[]", 'description' => "string[]", 'price' => "string[]", 'image' => "string[]"])]
+    public function rules(): array
     {
         return [
             'name' => ['required'],

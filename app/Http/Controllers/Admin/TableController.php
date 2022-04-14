@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TableStoreRequest;
 use App\Models\Tables;
+use App\Repositories\TableRepositoryInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,12 +16,25 @@ use function Ramsey\Uuid\v1;
 
 class TableController extends Controller
 {
+    public Tables $table;
+    protected TableRepositoryInterface $tableRepository;
+
+    /**
+     * @param TableRepositoryInterface $tableRepository
+     * @param Tables $table
+     */
+    public function __construct(TableRepositoryInterface $tableRepository, Tables $table)
+    {
+        $this->table = $table;
+        $this->tableRepository = $tableRepository;
+    }
+
     /**
      * @return Application|Factory|View
      */
     public function index(): View|Factory|Application
     {
-        $tables = Tables::all();
+        $tables = $this->tableRepository->all();
         return view('admin.tables.index', compact('tables'));
     }
 
@@ -38,23 +52,15 @@ class TableController extends Controller
      */
     public function store(TableStoreRequest $request): RedirectResponse
     {
-        Tables::create([
-            'name' => $request->name,
-            'guest_number' => $request->guest_number,
-            'status' => $request->status,
-            'location' => $request->location,
-        ]);
-
+        $this->tableRepository->store($request);
         return to_route('admin.tables.index')->with('success', 'Table created successfully.');
     }
 
     /**
-     * Display the specified resource.
-     *
      * @param int $id
      * @return void
      */
-    public function show($id)
+    public function show(int $id): void
     {
         //
     }
@@ -75,8 +81,7 @@ class TableController extends Controller
      */
     public function update(TableStoreRequest $request, Tables $table): RedirectResponse
     {
-        $table->update($request->validated());
-
+        $this->tableRepository->update($request, $table);
         return to_route('admin.tables.index')->with('success', 'Table updated successfully.');
     }
 
@@ -86,9 +91,7 @@ class TableController extends Controller
      */
     public function destroy(Tables $table): RedirectResponse
     {
-        $table->reservations()->delete();
-        $table->delete();
-
+        $this->tableRepository->delete($table);
         return to_route('admin.tables.index')->with('danger', 'Table daleted successfully.');
     }
 }
