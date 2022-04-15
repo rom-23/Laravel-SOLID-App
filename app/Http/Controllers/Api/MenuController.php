@@ -45,4 +45,14 @@ class MenuController extends Controller
     {
         return response()->json($this->menuRepository->all());
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getMenu(Request $request): JsonResponse
+    {
+
+        return response()->json($this->menuRepository->show($request->menuId));
+    }
 }
